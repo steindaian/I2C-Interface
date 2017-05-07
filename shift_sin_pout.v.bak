@@ -1,0 +1,4 @@
+module shift_sin_pout #(
+	parameter w = 8
+) (
+	.
