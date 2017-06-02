@@ -32,9 +32,8 @@ module i2c_sclk_gen_tb(
    // initialize simulation
    initial
      begin
-	tb_rst_ = 1'b1;
-	#(`PER/2*7) tb_rst_ = 1'b0;
-	#(`PER) tb_rst_ = 1'b1;
+	tb_rst_ = 1'b0;
+	#(`PER/2*7) tb_rst_ = 1'b1;
      end
    // finish
 	initial begin

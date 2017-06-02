@@ -2,6 +2,8 @@ module i2c_fsm_transition_detect
 	(
 		input clk,
 		input in,
+		input rst_,
+		input nReset,
 		output low_high_trans,
 		output high_low_trans
 	);
@@ -22,35 +24,47 @@ module i2c_fsm_transition_detect
 		case (state)
 			IDLE:
 				begin
-					low_high_trans_nxt = 1'b0;
-					high_low_trans_nxt = 1'b0;
+					
 					if (in != in_delay) begin
 						if (in) begin
+							low_high_trans_nxt = 1'b1;
 							state_nxt = LH;
 						end
 						else begin
+							high_low_trans_nxt = 1'b1;
 							state_nxt = HL;
 						end
+					end
+					else begin
+						low_high_trans_nxt = 1'b0;
+						high_low_trans_nxt = 1'b0;
 					end
 				end
 			LH:
 				begin
-					low_high_trans_nxt = 1'b1;
+					low_high_trans_nxt = 1'b0;
 					state_nxt = IDLE;
 				end
 			HL:
 				begin
-					high_low_trans_nxt = 1'b1;
+					high_low_trans_nxt = 1'b0;
 					state_nxt = IDLE;
 				end
 		endcase
 	end
 	
 	always @(posedge clk) begin
-		state <= state_nxt;
-		low_high_trans_ff <= low_high_trans_nxt;
-		high_low_trans_ff <= high_low_trans_nxt;
-		in_delay <= in;
+		if(!rst_) begin
+			state <= IDLE;
+			low_high_trans_ff <= 1'b0;
+			high_low_trans_ff <= 1'b0;
+		end
+		else begin
+			state <= state_nxt;
+			low_high_trans_ff <= low_high_trans_nxt;
+			high_low_trans_ff <= high_low_trans_nxt;
+			in_delay <= in;
+		end
 	end
 	
 	assign low_high_trans = low_high_trans_ff;

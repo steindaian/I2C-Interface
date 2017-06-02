@@ -1,37 +1,38 @@
 module i2c_sclk_gen (
 	input clk,
 	input rst_,
+	input nReset,
 	output scl
 );
 
-reg scl_ff, scl_d;
-reg [15:0] cnt_d, cnt_ff;
-
-always @(*) begin
-	scl_d=scl_ff;
-	cnt_d = cnt_ff + 16'd1;
-	if(~rst_) begin
-		scl_d = 1'b0;
-		cnt_d = 16'd0;
-	end
-	else if(cnt_d == 16'd49) begin
-		cnt_d = 16'd0;
-		scl_d = ~scl_d;
-	end
-end
-
-always @(posedge clk or negedge rst_) begin
-	if(~rst_) begin
-		scl_ff <= 1'b0;
-		cnt_ff <= 15'd1;
-	end
-	else begin
-		scl_ff <= scl_d;
-		cnt_ff <= cnt_d;
-	end
-end
+reg [5:0]  cnt_ff,cnt_d;
+reg scl_d, scl_ff;
 
 assign scl = scl_ff;
 
+always @ (*)
+     begin
+	scl_d = scl_ff;
+	cnt_d = cnt_ff + 1;
+	if (cnt_d == 6'd5)
+	  begin
+	     scl_d = ~scl_d;
+	     cnt_d = 6'd0;	  
+	  end
+     end
+
+always @ (posedge clk, negedge rst_)
+     begin
+	if(!rst_)
+	  begin
+	     scl_ff <= 1'b1;
+	     cnt_ff <= 6'd0;
+	  end
+	else
+	  begin
+	     scl_ff <= scl_d;
+	     cnt_ff <= cnt_d;
+	  end
+     end
 endmodule 
 	

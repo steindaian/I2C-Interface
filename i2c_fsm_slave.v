@@ -1,0 +1,22 @@
+module i2c_fsm_slave(
+	input clk,
+	input rst_,
+	input nReset,
+	input [3:0] cmd,
+	input master,
+	input din,
+	input scl_i,
+	input sda_i,
+	input scl_lh,
+	input scl_hl,
+	input sda_lh,
+	input sda_hl,
+	output busy,
+	output transfer,
+	output cmd_ack,
+	output al,
+	output sda_o,
+	output scl_oen,
+	output sda_oen,
+	output reg dout
+);
