@@ -53,20 +53,29 @@ initial begin
 	cmd = 8'b10000000;
 	wr_en = 1'b1;
 	#100 begin
-		cmd = 8'b00100000;
-		din = 8'b10011011;
+		cmd = 8'b00010000;
+		din = 8'b10011010;
 	end 
 	#8900 begin
-		cmd = 8'b10000000;
-	end
-	#2600 begin
 		cmd = 8'b00010000;
 		din = 8'b10101010;
+	end
+	#9800 begin
+		cmd = 8'b10000000;
+	end
+	#200 begin
+		cmd = 8'b00100000;
+	end
+	#4500 begin
+		cmd = 8'b01000000;
 	end
 end
 
 initial begin
-	#200000 $stop;
+	#200000 begin
+		$dumpfile("write-write-start-read-stop.vcd");
+		$stop;
+	end
 end
 
 endmodule
